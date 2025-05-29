@@ -1,0 +1,18 @@
+# terraform {
+#   backend "s3" {
+#     bucket         = "terraform-state-medusa-alvin"
+#     key            = "medusa/ecs/terraform.tfstate"
+#     region         = "us-east-1"
+#     dynamodb_table = "terraform-locks"     # Optional (if created)
+#     encrypt        = true
+#   }
+# }
+terraform {
+  backend "s3" {
+    bucket         = "terraform-state-medusa-alvin"
+    key            = "medusa/ecs/terraform.tfstate"
+    region         = "ap-south-1"        # Correct region here
+    dynamodb_table = "terraform-locks"
+    encrypt        = true
+  }
+}
