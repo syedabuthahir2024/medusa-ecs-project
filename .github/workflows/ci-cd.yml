@@ -31,12 +31,14 @@ jobs:
           docker tag medusa:latest 970547337517.dkr.ecr.eu-north-1.amazonaws.com/medusa:latest
           docker push 970547337517.dkr.ecr.eu-north-1.amazonaws.com/medusa:latest
 
-      - name: Update ECS service
+      - name: Deploy to ECS service
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           cluster: medusa-cluster
           service: medusa-service
           task-definition: medusa-task.json
+          container-name: medusa
+          image: 970547337517.dkr.ecr.eu-north-1.amazonaws.com/medusa:latest
         env:
           AWS_DEFAULT_REGION: eu-north-1
           AWS_REGION: eu-north-1
