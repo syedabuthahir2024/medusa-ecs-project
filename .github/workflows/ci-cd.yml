@@ -25,26 +25,24 @@ jobs:
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Build, Tag, and Push image to ECR
+      - name: Build, tag, and push Docker image
         run: |
           docker build -t medusa:latest .
           docker tag medusa:latest 970547337517.dkr.ecr.eu-north-1.amazonaws.com/medusa:latest
           docker push 970547337517.dkr.ecr.eu-north-1.amazonaws.com/medusa:latest
 
-      - name: Debug — Show medusa-task.json contents
-        run: cat medusa-task.json
+      - name: Update ECS task definition with new image
+        id: update-task-def
+        run: |
+          # Replace the image field inside containerDefinitions[0]
+          jq '.containerDefinitions[0].image = "970547337517.dkr.ecr.eu-north-1.amazonaws.com/medusa:latest"' medusa-task.json > new-task-def.json
 
-      - name: Render new ECS task definition
-        id: render-task-def
-        uses: aws-actions/amazon-ecs-render-task-definition@v1
-        with:
-          task-definition: medusa-task.json
-          container-name: medusa-container   # MUST MATCH your JSON exactly
-          image: 970547337517.dkr.ecr.eu-north-1.amazonaws.com/medusa:latest
+      - name: Debug — Show updated task definition
+        run: cat new-task-def.json
 
-      - name: Deploy to ECS
+      - name: Deploy to ECS service
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           cluster: medusa-cluster
           service: medusa-service
-          task-definition: ${{ steps.render-task-def.outputs.task-definition }}
+          task-definition: new-task-def.json
