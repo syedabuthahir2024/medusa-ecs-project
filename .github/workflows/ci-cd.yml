@@ -28,8 +28,8 @@ jobs:
       - name: Build, Tag, and Push image to ECR
         run: |
           docker build -t medusa:latest .
-          docker tag medusa:latest 970547337517.dkr.ecr.ap-south-1.amazonaws.com/medusa:latest
-          docker push 970547337517.dkr.ecr.ap-south-1.amazonaws.com/medusa:latest
+          docker tag medusa:latest 970547337517.dkr.ecr.eu-north-1.amazonaws.com/medusa:latest
+          docker push 970547337517.dkr.ecr.eu-north-1.amazonaws.com/medusa:latest
 
       - name: Update ECS service
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
