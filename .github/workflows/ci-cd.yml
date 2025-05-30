@@ -34,10 +34,11 @@ jobs:
       - name: Debug — Show medusa-task.json contents
         run: cat medusa-task.json
 
-      - name: Create updated ECS task definition (manual override)
+      - name: Create updated ECS task definition JSON string
         id: new-task-def
         run: |
-          jq '.containerDefinitions[0].image = "970547337517.dkr.ecr.eu-north-1.amazonaws.com/medusa:latest"' medusa-task.json > new-task-def.json
+          updated_task_def=$(jq '.containerDefinitions[0].image = "970547337517.dkr.ecr.eu-north-1.amazonaws.com/medusa:latest"' medusa-task.json)
+          echo "::set-output name=taskdef::$updated_task_def"
         shell: bash
 
       - name: Deploy to ECS
@@ -45,4 +46,4 @@ jobs:
         with:
           cluster: medusa-cluster
           service: medusa-service
-          task-definition: new-task-def.json
+          task-definition: ${{ steps.new-task-def.outputs.taskdef }}
