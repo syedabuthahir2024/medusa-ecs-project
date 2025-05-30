@@ -31,22 +31,17 @@ jobs:
           docker tag medusa:latest 970547337517.dkr.ecr.eu-north-1.amazonaws.com/medusa:latest
           docker push 970547337517.dkr.ecr.eu-north-1.amazonaws.com/medusa:latest
 
-      - name: Update image in task definition
+      - name: Render new ECS task definition
         id: render-task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: medusa-task.json
-          container-name: medusa-container
+          container-name: medusa-container  # this must match the name in the JSON
           image: 970547337517.dkr.ecr.eu-north-1.amazonaws.com/medusa:latest
 
-      - name: Deploy updated task definition to ECS
+      - name: Deploy to ECS
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           cluster: medusa-cluster
           service: medusa-service
           task-definition: ${{ steps.render-task-def.outputs.task-definition }}
-        env:
-          AWS_DEFAULT_REGION: eu-north-1
-          AWS_REGION: eu-north-1
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
