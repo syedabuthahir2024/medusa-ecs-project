@@ -1,12 +1,15 @@
 {
-  "name": "yes",
+  "name": "medusa-backend",
   "version": "1.0.0",
-  "description": "This project demonstrates how to deploy the open-source [MedusaJS](https://medusajs.com/) headless commerce backend to AWS using ECS with Fargate. The infrastructure is provisioned using Terraform, and the CI/CD pipeline is set up using GitHub Actions.",
+  "description": "Medusa backend app",
   "main": "index.js",
   "scripts": {
-    "start": "medusa develop"
+    "start": "medusa develop",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@medusajs/medusa": "^1.0.0"
+  }
 }
