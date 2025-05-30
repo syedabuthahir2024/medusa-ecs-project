@@ -18,8 +18,8 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-access-key-id: ${{ secrets.AKIA6D6JBDEW75NSUCHD }}
+          aws-secret-access-key: ${{ secrets.vTBsRp1S8iCEpfgEJIf9AKB04MFKa8sDJ+D/FATK }}
           aws-region: ap-south-1
 
       - name: Login to Amazon ECR
@@ -41,5 +41,5 @@ jobs:
         env:
           AWS_DEFAULT_REGION: ap-south-1
           AWS_REGION: ap-south-1
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.vTBsRp1S8iCEpfgEJIf9AKB04MFKa8sDJ+D/FATK }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.vTBsRp1S8iCEpfgEJIf9AKB04MFKa8sDJ+D/FATK }}
