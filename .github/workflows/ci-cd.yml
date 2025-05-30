@@ -31,19 +31,13 @@ jobs:
           docker tag medusa:latest 970547337517.dkr.ecr.eu-north-1.amazonaws.com/medusa:latest
           docker push 970547337517.dkr.ecr.eu-north-1.amazonaws.com/medusa:latest
 
-      - name: Debug — Show medusa-task.json contents
-        run: cat medusa-task.json
-
-      - name: Create updated ECS task definition JSON string
-        id: new-task-def
+      - name: Create updated ECS task definition file
         run: |
-          updated_task_def=$(jq '.containerDefinitions[0].image = "970547337517.dkr.ecr.eu-north-1.amazonaws.com/medusa:latest"' medusa-task.json)
-          echo "::set-output name=taskdef::$updated_task_def"
-        shell: bash
+          jq '.containerDefinitions[0].image = "970547337517.dkr.ecr.eu-north-1.amazonaws.com/medusa:latest"' medusa-task.json > new-task-def.json
 
       - name: Deploy to ECS
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           cluster: medusa-cluster
           service: medusa-service
-          task-definition: ${{ steps.new-task-def.outputs.taskdef }}
+          task-definition: new-task-def.json
