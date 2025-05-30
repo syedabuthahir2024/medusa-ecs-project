@@ -36,7 +36,7 @@ jobs:
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: medusa-task.json
-          container-name: medusa
+          container-name: medusa-container
           image: 970547337517.dkr.ecr.eu-north-1.amazonaws.com/medusa:latest
 
       - name: Deploy updated task definition to ECS
