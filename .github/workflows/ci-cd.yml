@@ -31,12 +31,15 @@ jobs:
           docker tag medusa:latest 970547337517.dkr.ecr.eu-north-1.amazonaws.com/medusa:latest
           docker push 970547337517.dkr.ecr.eu-north-1.amazonaws.com/medusa:latest
 
+      - name: Debug — Show medusa-task.json contents
+        run: cat medusa-task.json
+
       - name: Render new ECS task definition
         id: render-task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: medusa-task.json
-          container-name: medusa-container      # must exactly match your container name in task JSON
+          container-name: medusa-container   # MUST MATCH your JSON exactly
           image: 970547337517.dkr.ecr.eu-north-1.amazonaws.com/medusa:latest
 
       - name: Deploy to ECS
