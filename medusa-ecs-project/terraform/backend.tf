@@ -11,7 +11,7 @@ terraform {
   backend "s3" {
     bucket         = "terraform-state-medusa-alvin"
     key            = "medusa/ecs/terraform.tfstate"
-    region         = "ap-south-1"        # Correct region here
+    region         = "eu-north-1"        # Correct region here
     dynamodb_table = "terraform-locks"
     encrypt        = true
   }
