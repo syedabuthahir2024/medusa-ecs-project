@@ -31,6 +31,9 @@ jobs:
           docker tag medusa:latest 970547337517.dkr.ecr.eu-north-1.amazonaws.com/medusa:latest
           docker push 970547337517.dkr.ecr.eu-north-1.amazonaws.com/medusa:latest
 
+      - name: List images in ECR (debug)
+        run: aws ecr list-images --repository-name medusa --region eu-north-1
+
       - name: Update ECS task definition with new image
         id: update-task-def
         run: |
