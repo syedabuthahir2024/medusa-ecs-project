@@ -9,4 +9,4 @@ RUN npm install
 
 EXPOSE 9000
 
-CMD ["medusa", "start"]
+CMD ["npm", "start"]
