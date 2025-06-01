@@ -13,6 +13,6 @@ terraform {
   backend "s3" {
     bucket = "terraform-state-medusa-eu"
     key    = "env:/terraform.tfstate"  # or update this to a better path like "medusa/terraform.tfstate"
-    region = "eu-north-1"
+    region = "ap-south-1"
   }
 }
