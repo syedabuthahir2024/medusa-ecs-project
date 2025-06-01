@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout your repository (for task def files like medusa-task.json)
+      # Step 1: Checkout your repository (to get ECS task definition file)
       - name: Checkout code
         uses: actions/checkout@v3
 
@@ -17,8 +17,8 @@ jobs:
       - name: Clone Medusa project
         run: git clone https://github.com/medusajs/medusa.git
 
-      # Step 3: List medusa folder contents (debug)
-      - name: List medusa folder
+      # Step 3: List Medusa folder contents (for debugging)
+      - name: Debug: List medusa folder
         run: ls -al ./medusa
 
       # Step 4: Set up Docker Buildx
@@ -44,7 +44,7 @@ jobs:
           docker tag medusa:latest 970547337517.dkr.ecr.ap-south-1.amazonaws.com/medusa:latest
           docker push 970547337517.dkr.ecr.ap-south-1.amazonaws.com/medusa:latest
 
-      # Step 8: List images in ECR (optional debug)
+      # Step 8: Debug — List images in ECR
       - name: List images in ECR (debug)
         run: aws ecr list-images --repository-name medusa --region ap-south-1
 
