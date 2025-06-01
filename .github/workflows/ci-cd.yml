@@ -20,7 +20,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: eu-north-1
+          aws-region: ap-south-1
 
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
@@ -28,17 +28,17 @@ jobs:
       - name: Build, tag, and push Docker image
         run: |
           docker build -t medusa:latest .
-          docker tag medusa:latest 970547337517.dkr.ecr.eu-north-1.amazonaws.com/medusa:latest
-          docker push 970547337517.dkr.ecr.eu-north-1.amazonaws.com/medusa:latest
+          docker tag medusa:latest 970547337517.dkr.ecr.ap-south-1.amazonaws.com/medusa:latest
+          docker push 970547337517.dkr.ecr.ap-south-1.amazonaws.com/medusa:latest
 
       - name: List images in ECR (debug)
-        run: aws ecr list-images --repository-name medusa --region eu-north-1
+        run: aws ecr list-images --repository-name medusa --region ap-south-1
 
       - name: Update ECS task definition with new image
         id: update-task-def
         run: |
           # Replace the image field inside containerDefinitions[0]
-          jq '.containerDefinitions[0].image = "970547337517.dkr.ecr.eu-north-1.amazonaws.com/medusa:latest"' medusa-task.json > new-task-def.json
+          jq '.containerDefinitions[0].image = "970547337517.dkr.ecr.ap-south-1.amazonaws.com/medusa:latest"' medusa-task.json > new-task-def.json
 
       - name: Debug — Show updated task definition
         run: cat new-task-def.json
