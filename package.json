@@ -1,8 +1,0 @@
-{
-  "dependencies": {
-    "@medusajs/medusa": "^2.8.3"
-  },
-  "scripts": {
-    "start": "medusa start"
-  }
-}
