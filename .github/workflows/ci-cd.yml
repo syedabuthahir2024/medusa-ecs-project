@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout your repository (to get ECS task definition file)
+      # Step 1: Checkout your repository (to get any configs if needed)
       - name: Checkout code
         uses: actions/checkout@v3
 
@@ -48,16 +48,58 @@ jobs:
       - name: List images in ECR (debug)
         run: aws ecr list-images --repository-name medusa --region ap-south-1
 
-      # Step 9: Update ECS task definition with new image
-      - name: Update ECS task definition with new image
+      # Step 9: Create ECS task definition JSON file (medusa-task.json)
+      - name: Create medusa-task.json file
+        run: |
+          cat > medusa-task.json <<EOF
+          {
+            "family": "medusa-task",
+            "networkMode": "awsvpc",
+            "requiresCompatibilities": ["FARGATE"],
+            "cpu": "512",
+            "memory": "1024",
+            "executionRoleArn": "arn:aws:iam::970547337517:role/ecsTaskExecutionRole",
+            "taskRoleArn": "arn:aws:iam::970547337517:role/ecsTaskExecutionRole",
+            "containerDefinitions": [
+              {
+                "name": "medusa",
+                "image": "970547337517.dkr.ecr.ap-south-1.amazonaws.com/medusa:latest",
+                "portMappings": [
+                  {
+                    "containerPort": 9000,
+                    "protocol": "tcp"
+                  }
+                ],
+                "essential": true,
+                "environment": [
+                  {
+                    "name": "NODE_ENV",
+                    "value": "production"
+                  }
+                ],
+                "logConfiguration": {
+                  "logDriver": "awslogs",
+                  "options": {
+                    "awslogs-group": "/ecs/medusa",
+                    "awslogs-region": "ap-south-1",
+                    "awslogs-stream-prefix": "ecs"
+                  }
+                }
+              }
+            ]
+          }
+          EOF
+
+      # Step 10: Update ECS task definition image with jq (optional, can be skipped now)
+      - name: Update ECS task definition image with jq
         run: |
           jq '.containerDefinitions[0].image = "970547337517.dkr.ecr.ap-south-1.amazonaws.com/medusa:latest"' medusa-task.json > new-task-def.json
 
-      # Step 10: Debug - Show updated task definition
+      # Step 11: Debug - Show updated task definition
       - name: Debug - Show updated task definition
         run: cat new-task-def.json
 
-      # Step 11: Deploy to ECS service
+      # Step 12: Deploy updated task definition to ECS service
       - name: Deploy to ECS service
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
