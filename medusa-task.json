@@ -9,7 +9,7 @@
   "containerDefinitions": [
     {
       "name": "medusa",
-      "image": "970547337517.dkr.ecr.eu-north-1.amazonaws.com/medusa:latest",
+      "image": "970547337517.dkr.ecr.ap-south-1.amazonaws.com/medusa:latest",
       "portMappings": [
         {
           "containerPort": 9000,
