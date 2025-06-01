@@ -2,30 +2,22 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [dev]
+    branches: [dev]   # change branch as needed
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout your repository (to get any configs if needed)
+      # Step 1: Checkout your repository (which contains your Dockerfile and app code)
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Step 2: Clone Medusa open-source project
-      - name: Clone Medusa project
-        run: git clone https://github.com/medusajs/medusa.git
-
-      # Step 3: List Medusa folder contents (for debugging)
-      - name: Debug - List medusa folder
-        run: ls -al ./medusa
-
-      # Step 4: Set up Docker Buildx
+      # Step 2: Set up Docker Buildx
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      # Step 5: Configure AWS credentials
+      # Step 3: Configure AWS credentials
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
@@ -33,73 +25,31 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-south-1
 
-      # Step 6: Login to Amazon ECR
+      # Step 4: Login to Amazon ECR
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
 
-      # Step 7: Build, tag, and push Docker image to ECR
+      # Step 5: Build, tag, and push Docker image to ECR
       - name: Build, tag, and push Docker image
         run: |
-          docker build -t medusa:latest -f ./medusa/Dockerfile ./medusa
+          docker build -t medusa:latest -f ./Dockerfile .
           docker tag medusa:latest 970547337517.dkr.ecr.ap-south-1.amazonaws.com/medusa:latest
           docker push 970547337517.dkr.ecr.ap-south-1.amazonaws.com/medusa:latest
 
-      # Step 8: Debug - List images in ECR
-      - name: List images in ECR (debug)
+      # Step 6: Debug - List images in ECR (optional)
+      - name: List images in ECR
         run: aws ecr list-images --repository-name medusa --region ap-south-1
 
-      # Step 9: Create ECS task definition JSON file (medusa-task.json)
-      - name: Create medusa-task.json file
-        run: |
-          cat > medusa-task.json <<EOF
-          {
-            "family": "medusa-task",
-            "networkMode": "awsvpc",
-            "requiresCompatibilities": ["FARGATE"],
-            "cpu": "512",
-            "memory": "1024",
-            "executionRoleArn": "arn:aws:iam::970547337517:role/ecsTaskExecutionRole",
-            "taskRoleArn": "arn:aws:iam::970547337517:role/ecsTaskExecutionRole",
-            "containerDefinitions": [
-              {
-                "name": "medusa",
-                "image": "970547337517.dkr.ecr.ap-south-1.amazonaws.com/medusa:latest",
-                "portMappings": [
-                  {
-                    "containerPort": 9000,
-                    "protocol": "tcp"
-                  }
-                ],
-                "essential": true,
-                "environment": [
-                  {
-                    "name": "NODE_ENV",
-                    "value": "production"
-                  }
-                ],
-                "logConfiguration": {
-                  "logDriver": "awslogs",
-                  "options": {
-                    "awslogs-group": "/ecs/medusa",
-                    "awslogs-region": "ap-south-1",
-                    "awslogs-stream-prefix": "ecs"
-                  }
-                }
-              }
-            ]
-          }
-          EOF
-
-      # Step 10: Update ECS task definition image with jq (optional, can be skipped now)
-      - name: Update ECS task definition image with jq
+      # Step 7: Update ECS task definition with new image
+      - name: Update ECS task definition with new image
         run: |
           jq '.containerDefinitions[0].image = "970547337517.dkr.ecr.ap-south-1.amazonaws.com/medusa:latest"' medusa-task.json > new-task-def.json
 
-      # Step 11: Debug - Show updated task definition
-      - name: Debug - Show updated task definition
+      # Step 8: Debug - Show updated task definition
+      - name: Show updated task definition
         run: cat new-task-def.json
 
-      # Step 12: Deploy updated task definition to ECS service
+      # Step 9: Deploy to ECS service
       - name: Deploy to ECS service
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
