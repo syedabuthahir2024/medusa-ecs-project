@@ -1,12 +1,23 @@
-FROM node:18-alpine
+# Use official Medusa base image
+FROM node:18-slim
 
+# Create app directory
 WORKDIR /app
 
-COPY package*.json ./
+# Copy files
 COPY . .
 
+# Install dependencies
 RUN npm install
 
+# Build (optional if using TypeScript or frontend)
+# RUN npm run build
+
+# Expose port
 EXPOSE 9000
 
-CMD ["npm", "start"]
+# Set environment variables
+ENV NODE_ENV=production
+
+# Start Medusa server
+CMD ["npx", "medusa", "develop"]
