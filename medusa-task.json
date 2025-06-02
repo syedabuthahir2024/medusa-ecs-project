@@ -25,6 +25,14 @@
         {
           "name": "JWT_SECRET",
           "value": "28OIRX1OTq5h+upoSQs4SXENrZGfBrJWXcJo+cR9+9U="
+        },
+        {
+          "name": "REDIS_URL",
+          "value": "redis://your-redis-endpoint:6379"
+        },
+        {
+          "name": "COOKIE_SECRET",
+          "value": "your_cookie_secret_here"
         }
       ],
       "mountPoints": [],
@@ -60,7 +68,7 @@
       "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
     },
     {
-      "name": "com.amazonaws.ecs.capability.task-iam-role"
+      "name": "ecs.capability.task-iam-role"
     },
     {
       "name": "ecs.capability.execution-role-ecr-pull"
