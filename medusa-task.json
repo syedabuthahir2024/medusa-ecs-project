@@ -1,18 +1,18 @@
 {
   "family": "medusa-task",
-  "taskRoleArn": "arn:aws:iam::970547337517:role/ecsTaskExecutionRole",
-  "executionRoleArn": "arn:aws:iam::970547337517:role/ecsTaskExecutionRole",
   "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "256",
+  "memory": "512",
+  "executionRoleArn": "arn:aws:iam::970547337517:role/ecsTaskExecutionRole",
+  "taskRoleArn": "arn:aws:iam::970547337517:role/ecsTaskExecutionRole",
   "containerDefinitions": [
     {
-      "name": "medusa",
-      "image": "970547337517.dkr.ecr.ap-south-1.amazonaws.com/medusa:latest",
-      "cpu": 0,
-      "memory": null,
+      "name": "medusa-container",
+      "image": "970547337517.dkr.ecr.eu-north-1.amazonaws.com/medusa:latest",
       "portMappings": [
         {
           "containerPort": 9000,
-          "hostPort": 9000,
           "protocol": "tcp"
         }
       ],
@@ -23,66 +23,22 @@
           "value": "production"
         },
         {
-          "name": "JWT_SECRET",
-          "value": "28OIRX1OTq5h+upoSQs4SXENrZGfBrJWXcJo+cR9+9U="
-        },
-        {
           "name": "REDIS_URL",
-          "value": "redis://your-redis-endpoint:6379"
+          "value": "redis://host.docker.internal:6379"
         },
         {
           "name": "COOKIE_SECRET",
-          "value": "your_cookie_secret_here"
+          "value": "pxfSuHbXNwknfPQcWbB850owFCCz5218ZqO9LHZ+eqA="
         }
       ],
-      "mountPoints": [],
-      "volumesFrom": [],
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
           "awslogs-group": "/ecs/medusa",
-          "awslogs-region": "ap-south-1",
+          "awslogs-region": "eu-north-1",
           "awslogs-stream-prefix": "ecs"
         }
-      },
-      "systemControls": []
+      }
     }
-  ],
-  "volumes": [],
-  "requiresCompatibilities": [
-    "FARGATE"
-  ],
-  "cpu": "256",
-  "memory": "512",
-  "requiresAttributes": [
-    {
-      "name": "com.amazonaws.ecs.capability.logging-driver.awslogs"
-    },
-    {
-      "name": "ecs.capability.execution-role-awslogs"
-    },
-    {
-      "name": "com.amazonaws.ecs.capability.ecr-auth"
-    },
-    {
-      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
-    },
-    {
-      "name": "ecs.capability.task-iam-role"
-    },
-    {
-      "name": "ecs.capability.execution-role-ecr-pull"
-    },
-    {
-      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
-    },
-    {
-      "name": "ecs.capability.task-eni"
-    }
-  ],
-  "placementConstraints": [],
-  "compatibilities": [
-    "EC2",
-    "FARGATE"
   ]
 }
