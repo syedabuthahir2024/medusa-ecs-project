@@ -127,40 +127,10 @@ Update ECS service with new image
 5. Access the Application
 Once ECS service is deployed:
 
-bash
-Copy
-Edit
-http://<ALB-DNS-NAME>:9000/
-🎥 Demo Video
-📹 Click here to watch the video explanation
 
-The video includes:
-
-Project walkthrough
-
-Terraform infrastructure deployment
-
-Docker build and push
-
-GitHub Actions demo
-
-ECS deployment
-
-Final output with ALB URL
-
-🧼 Cleanup
-bash
-Copy
-Edit
-terraform destroy
-📌 Useful Links
-MedusaJS Docs
-
-Terraform AWS Provider
 
 GitHub Actions Docs
 
 🙋‍♂️ Author
-Your Name
+SYED ABUTHAHIR
 DevOps Engineer
-LinkedIn | GitHub
